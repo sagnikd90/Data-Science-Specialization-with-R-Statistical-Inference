@@ -1,0 +1,114 @@
+---
+title: "Data Science Course with R:Statistical Inference:Course Project"
+author: "Sagnik Das"
+date: "6/24/2020"
+output:
+  pdf_document: default
+  html_document: default
+subtitle: Question 2:Basic Inferential Data Analysis Instructions
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load the ToothGrowth data and perform some basic exploratory data analyses
+
+## Answer:
+
+
+```{r,echo=TRUE, results='markup', fig.align='center'}
+
+library(datasets)
+library(ggplot2)
+
+dat<- as.data.frame(ToothGrowth)
+
+head(dat)
+names(dat)
+
+dat$dose<- as.factor(dat$dose)
+
+str(dat)
+
+summary(dat)
+
+table(dat$supp,dat$dose)
+
+
+p1<- ggplot(dat, aes(x=dose,y=len,fill=dose)) + geom_boxplot() + theme(legend.position = "right") + facet_grid(.~supp)
+p1
+
+```
+
+
+The above set of results provide a brief summary of the dataset which primarily consists of 3 variables: The length of teeth of guinea pig given by the variable "len", the suppliment given to the guniea pigs represented by tghe variable "supp" and lastly the variable "dose" which is a factor variable which takes 3 values and represents the dosages of the suppliments given to the guinea pigs. The above figures records the growth in the in the tooth length of the guinea pigs, according to the dosage amounts and what kind of supplement they were given.
+
+## Provide a basic summary of the data.
+
+The first figure shows that increasing the dosage of the supplements increases the size of the tooth of the guinea pigs. It also shows that for dosage amounts 0.5 and 1, Orange Juice is a more effective supplement compared to Ascorbic Acid when it comes to helping tooth growth. However, when the dosage amounts to 2 miligrams, the difference in the effect of the 2 supplements are not that distinct. Also, for a particular supplement, the difference in the effect for different dosage amounts are much more profound in case of ascorbic acid than orange juice.
+
+## Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+
+##### Hypothesis 1: Hypothesis to check if there are statistically significant difference in the mean growth of length of tooth according to the difference in the supplements.
+
+```{r,echo=TRUE,results='markup'}
+hyp1<- t.test(dat$len~dat$supp)
+
+print(c(paste("Confidence Interval:",hyp1$conf.int), paste("P-Value:",hyp1$p.value )))
+
+```
+
+Interpretation: We fail to reject the null hypothesis  that there is no statistically significant difference between the effect of the supplements across all dosages. The p-value is greater than 5% which is the level of significance.
+
+
+##### Hypothesis 2: Hypothesis to check if there are statistically significant difference in the mean growth of length of tooth according to the difference in the supplements when dose==0.5
+
+```{r,echo=TRUE,results='markup'}
+hyp2<- t.test(len~supp,data = subset(dat,dose==0.5))
+
+print(c(paste("Confidence Interval:",hyp2$conf.int), paste("P-Value:",hyp2$p.value )))
+
+```
+
+Interpretation: We reject the null hypothesis  that there is no statistically significant difference between the effect of the supplements across all dosages. The p-value is less than 5% which is the level of significance. Thus we conclude statistically significant difference in the effects of the supplements when dosage is 0.5.
+
+##### Hypothesis 3: Hypothesis to check if there are statistically significant difference in the mean growth of length of tooth according to the difference in the supplements when dose==1
+
+```{r,echo=TRUE,results='markup'}
+hyp3<- t.test(len~supp,data = subset(dat,dose==1))
+
+print(c(paste("Confidence Interval:",hyp3$conf.int), paste("P-Value:",hyp3$p.value )))
+
+```
+
+Interpretation: We reject the null hypothesis that there is no statistically significant difference between the effect of the supplements across all dosages. The p-value is less than 5% which is the level of significance. Thus we conclude statistically significant difference in the effects of the supplements when dosage is 1.
+
+
+##### Hypothesis 4: Hypothesis to check if there are statistically significant difference in the mean growth of length of tooth according to the difference in the supplements when dose==2
+
+```{r,echo=TRUE,results='markup'}
+hyp4<- t.test(len~supp,data = subset(dat,dose==2))
+
+print(c(paste("Confidence Interval:",hyp4$conf.int), paste("P-Value:",hyp4$p.value )))
+
+```
+
+Interpretation: We fail to reject the null hypothesis  that there is no statistically significant difference between the effect of the supplements across all dosages. The p-value is greater than 5% which is the level of significance.
+
+## State your conclusions and the assumptions needed for your conclusions.
+
+### Conclusions:
+
+Orange Juice as a supplement has a stronger effect on tooth length than compared to ascorbic acid when the dosages are 0.5 mg and 1 mg respectively. However, for a higher dosage of 2 mg, there are no statistically significant difference in the effects.
+
+### Assumption: 
+
+(1) The tooth lengths are normally distributed
+(2) There are no unmeasured variables affecting the tooth length.
+
+
+
+
+
+
